@@ -10,18 +10,18 @@ namespace Snake
 	public class SegmentsManager : MonoBehaviour
 	{
 		public List<Segment> segments;
-		[SerializeField] private ColorManager colorManager;
+		//[SerializeField] private ColorManager colorManager;
 		[SerializeField] private Eater eater;
 		[SerializeField] private Segment prefab;
 		[SerializeField] private int maxSegments = 10;
 		private float speedZ;
 		private WaitForSeconds colorizeWait = new WaitForSeconds(0.1f);
-
+		private Color currentColor;
 		private void Start()
 		{
 			segments.AddRange(GetComponentsInChildren<Segment>());
 			SetupTweens();
-			SetColor(colorManager.correctColor);
+			//SetColor(colorManager.CorrectColor);
 			speedZ = SpeedManager.CurrentSpeed;
 			eater.OnEated += HandleEated;
 		}
@@ -51,6 +51,7 @@ namespace Snake
 
 		public void SetColor(Color color)
 		{
+			currentColor = color;
 			StartCoroutine(Colorize(color));
 		}
 
@@ -72,7 +73,7 @@ namespace Snake
 				newSegment.transform.localScale = Vector3.zero;
 				newSegment.transform.position = segments.Last().transform.position;
 				newSegment.transform.DOScale(prefab.transform.localScale, 0.3f);
-				newSegment.SetColor(colorManager.correctColor);
+				newSegment.SetColor(currentColor);
 				newSegment.EatingTween.OnComplete(AddNewSegment);
 				segments[segments.Count - 1].EatingTween.onComplete = () => newSegment.EatingTween.Restart();
 				segments.Add(newSegment);

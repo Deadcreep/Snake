@@ -175,7 +175,6 @@ namespace Edibles
 
 		private void GenerateRow()
 		{
-			Debug.Log($"[AreaManager] generate row", this);
 			var row = generator.GenerateRow();
 			for (int i = 0; i < areaWidth; i++)
 			{
@@ -197,13 +196,13 @@ namespace Edibles
 
 				case CellType.Incorrect:
 					var incorrect = humanPool.Rent();
-					incorrect.Color = colorManager.randomIncorrectColor;
+					incorrect.Color = colorManager.RandomIncorrectColor;
 					incorrect.type = CellType.Incorrect;
 					return incorrect.transform;
 
 				case CellType.Correct:
-					var correct = humanPool.Rent();
-					correct.Color = colorManager.correctColor;
+					var correct = humanPool.Rent();					
+					correct.Color = colorManager.CorrectColor;
 					correct.type = CellType.Correct;
 					return correct.transform;
 
@@ -227,7 +226,7 @@ namespace Edibles
 		private void HandleHumanEated(Human human)
 		{
 			humanPool.Return(human);
-			if (human.Color == colorManager.correctColor)
+			if (human.Color == colorManager.CorrectColor)
 				OnEated?.Invoke(CellType.Correct);
 			else
 				OnEated?.Invoke(CellType.Incorrect);

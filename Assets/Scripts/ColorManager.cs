@@ -8,8 +8,8 @@ namespace Edibles
 {
 	public class ColorManager : MonoBehaviour
 	{
-		public Color correctColor => currentNode.Value;
-		public Color randomIncorrectColor => incorrectColors[Random.Range(0, incorrectColors.Count)];
+		public Color CorrectColor => currentNode.Value;
+		public Color RandomIncorrectColor => incorrectColors[Random.Range(0, incorrectColors.Count)];
 		[SerializeField] private SegmentsManager segmentsManager;
 		[SerializeField] private Colorizer colorizer;
 		[SerializeField] private List<Color> colors;
@@ -24,12 +24,13 @@ namespace Edibles
 			CreateSequence();
 			colorizer.OnColorized += Colorize;
 			incorrectColors = new List<Color>(colors);
-			incorrectColors.Remove(correctColor);
+			incorrectColors.Remove(CorrectColor);
 		}
 
 		private void Start()
 		{
 			colorizer.SetColor(currentNode.Next.Value);
+			segmentsManager.SetColor(CorrectColor);
 		}
 
 		private void OnDestroy()
@@ -61,7 +62,7 @@ namespace Edibles
 			{
 				if (incorrectColors[i] == (currentNode.Next ?? colorSequence.First).Value)
 				{
-					incorrectColors[i] = correctColor;
+					incorrectColors[i] = CorrectColor;
 					break;
 				}
 			}
@@ -79,12 +80,10 @@ namespace Edibles
 			}
 			colorSequence = new LinkedList<Color>(colors);
 			currentNode = colorSequence.First;
-			Debug.Log($"[ColorManager] sequence created", this);
 		}
 
 		private void UpdateColorizer(Unit _)
 		{
-			Debug.Log($"[ColorManager] update colorizer {correctColor} ", this);
 			colorizer.transform.position += stepVector;
 			colorizer.SetColor((currentNode.Next ?? colorSequence.First).Value);
 		}

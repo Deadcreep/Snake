@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 899cbaaf316f5074c92b9f68585504a3, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -475,7 +475,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   segments: []
-  colorManager: {fileID: 316322833}
   eater: {fileID: 800857886}
   prefab: {fileID: 4529544947568668999, guid: 0dfb763b600940e42923748afd1580c0, type: 3}
   maxSegments: 20
@@ -5518,7 +5517,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 0, a: 0}
   - {r: 1, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 0.3137255, g: 0, b: 1, a: 1}
+  - {r: 0.4716981, g: 0.22455125, b: 0, a: 1}
   - {r: 1, g: 0.5176471, b: 0.21176471, a: 1}
 --- !u!4 &316322834
 Transform:
@@ -11183,7 +11182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsEnabled: 1
   borders: {x: -1.5, y: 1.5}
-  speedX: 2
+  speedX: 4
   maxXSpeed: 3
   moveVector: {x: 0, y: 0, z: 0}
   hitpoint: {x: 0, y: 0, z: 0}
@@ -16599,7 +16598,7 @@ MonoBehaviour:
   maxNegativeCount: 5
   maxCrystalCount: 5
   generationSpeedMultiplier: 0.75
-  zOffset: 5
+  zOffset: 10
   zStep: 1.5
   xPositions:
   - -1.5

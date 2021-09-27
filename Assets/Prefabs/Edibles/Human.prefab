@@ -96,11 +96,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  eaterLayer:
-    serializedVersion: 2
-    m_Bits: 64
   defaultScale: {x: 0.5, y: 0.5, z: 0.5}
-  color: {r: 1, g: 0, b: 0, a: 1}
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!65 &5822795009524085043
 BoxCollider:
   m_ObjectHideFlags: 0
