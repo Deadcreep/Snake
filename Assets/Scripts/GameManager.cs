@@ -19,15 +19,15 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		StartCoroutine(Tick());
+		StartCoroutine(CompleteGame());
 		areaManager.OnEated += HandleOnEated;
 		int targetRowsCount = (int)(SpeedManager.CurrentSpeed * targetLevelDuration / areaManager.Step);
 		int distanceBetweenColorChange = targetRowsCount / (colorChangeCount + 1);
 		for (int i = 1; i <= colorChangeCount; i++)
 		{
-			areaManager.TryReservePosition(i * distanceBetweenColorChange);
+			areaManager.ReservePositionForColorizer(i * distanceBetweenColorChange);
 		}
-		colorManager.SetupColorizer(distanceBetweenColorChange* areaManager.Step);
+		colorManager.SetupColorizer(distanceBetweenColorChange * areaManager.Step, areaManager.Offset);
 	}
 
 	private void OnDestroy()
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 		OnGameEnded?.Invoke(result);
 	}
 
-	private IEnumerator Tick()
+	private IEnumerator CompleteGame()
 	{
 		yield return new WaitForSeconds(targetLevelDuration);
 		EndGame(true);

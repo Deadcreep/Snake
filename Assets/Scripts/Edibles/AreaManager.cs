@@ -11,9 +11,9 @@ namespace Edibles
 	public class AreaManager : MonoBehaviour
 	{
 		public float Step => zStep;
+		public float Offset => zOffset;
 		[SerializeField] private int areaWidth = 3;
 		[SerializeField] private int maxNegativeCount = 5;
-		[SerializeField] private int maxCrystalCount = 5;
 		[SerializeField] private float generationSpeedMultiplier;
 		[SerializeField] private float zOffset = 5;
 		[SerializeField] private float zStep = 2;
@@ -23,14 +23,17 @@ namespace Edibles
 		[SerializeField] private ColorManager colorManager;
 		[SerializeField] private Eater eater;
 		[SerializeField] private EdiblesReturner returner;
+		[SerializeField] private EdiblesWeights weights;
 
 		[Header("Prefabs")]
 		[SerializeField] private Edible bombPrefab;
+
 		[SerializeField] private Edible crystalPrefab;
 		[SerializeField] private Human humanPrefab;
 
 		[Header("Pools settings")]
 		[SerializeField] private int preloadCount = 20;
+
 		[SerializeField] private int preloadThreshold = 3;
 
 		private AbstractEdiblesGenerator generator;
@@ -42,11 +45,12 @@ namespace Edibles
 		private float generationSpeed;
 		private WaitForSeconds generationWait;
 
-		private LinkedList<int> reservedPositions = new LinkedList<int>();
-		private LinkedListNode<int> nextToInsert;
+		private LinkedList<int> colorizerPositions = new LinkedList<int>();
+		private LinkedListNode<int> nextColorizerPosition;
+		private Color correctColor;
+		private int colorChanges = 1;
 
 		public event Action<CellType> OnEated;
-
 
 		private IEnumerator Start()
 		{
@@ -54,7 +58,7 @@ namespace Edibles
 			SpeedManager.OnSpeedChanged += SetSpeed;
 			eater.OnEated += HandleEated;
 			returner.OnEdibleOutOfArea += ReturnEdible;
-			generator = new EdiblesGenerator(areaWidth, maxNegativeCount, maxCrystalCount);
+			generator = new EdiblesGenerator(areaWidth, maxNegativeCount, weights);
 			bombPool = new EdiblePool(bombPrefab, transform);
 			crystalPool = new EdiblePool(crystalPrefab, transform);
 			humanPool = new HumanPool(humanPrefab, transform);
@@ -66,7 +70,7 @@ namespace Edibles
 			yield return x.ToAwaitableEnumerator();
 			yield return x2.ToAwaitableEnumerator();
 			yield return x3.ToAwaitableEnumerator();
-
+			correctColor = colorManager.CorrectColor;
 			for (int i = 0; i < initialRowCount; i++)
 			{
 				GenerateRow();
@@ -85,19 +89,19 @@ namespace Edibles
 			crystalPool.Dispose();
 		}
 
-		public bool TryReservePosition(int position)
+		public bool ReservePositionForColorizer(int position)
 		{
 			if (position < rowsCount)
 				return false;
-			foreach (var reserved in reservedPositions)
+			foreach (var reserved in colorizerPositions)
 			{
 				if (reserved == position)
 					return false;
 			}
 
-			reservedPositions.AddLast(position);
-			if (nextToInsert == null)
-				nextToInsert = reservedPositions.Last;
+			colorizerPositions.AddLast(position);
+			if (nextColorizerPosition == null)
+				nextColorizerPosition = colorizerPositions.Last;
 			return true;
 		}
 
@@ -160,11 +164,13 @@ namespace Edibles
 		{
 			while (enabled)
 			{
-				rowsCount++;
-				if (nextToInsert?.Value == rowsCount)
+				if (nextColorizerPosition?.Value == rowsCount)
 				{
+					rowsCount++;
 					zOffset += zStep;
-					nextToInsert = nextToInsert.Next;
+					nextColorizerPosition = nextColorizerPosition.Next;
+					correctColor = colorManager.GetColorAt(colorChanges);
+					colorChanges++;
 				}
 				else
 					GenerateRow();
@@ -185,6 +191,7 @@ namespace Edibles
 				}
 			}
 			zOffset += zStep;
+			rowsCount++;
 		}
 
 		private Transform GetCell(CellType type)
@@ -201,8 +208,8 @@ namespace Edibles
 					return incorrect.transform;
 
 				case CellType.Correct:
-					var correct = humanPool.Rent();					
-					correct.Color = colorManager.CorrectColor;
+					var correct = humanPool.Rent();
+					correct.Color = correctColor;
 					correct.type = CellType.Correct;
 					return correct.transform;
 

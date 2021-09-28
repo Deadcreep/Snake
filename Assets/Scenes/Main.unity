@@ -11182,7 +11182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsEnabled: 1
   borders: {x: -1.5, y: 1.5}
-  speedX: 4
+  speedX: 8
   maxXSpeed: 3
   moveVector: {x: 0, y: 0, z: 0}
   hitpoint: {x: 0, y: 0, z: 0}
@@ -16596,8 +16596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaWidth: 3
   maxNegativeCount: 5
-  maxCrystalCount: 5
-  generationSpeedMultiplier: 0.75
+  generationSpeedMultiplier: 1
   zOffset: 10
   zStep: 1.5
   xPositions:
@@ -16609,6 +16608,7 @@ MonoBehaviour:
   colorManager: {fileID: 316322833}
   eater: {fileID: 800857886}
   returner: {fileID: 471539827}
+  weights: {fileID: 11400000, guid: 3a9e6079a5f9ab24d94c6b9e49a5e9d2, type: 2}
   bombPrefab: {fileID: 9170124651817379841, guid: 045b67a2256068d4eadc93b7ead9bec0, type: 3}
   crystalPrefab: {fileID: 350110562384505709, guid: 501618ee4c2b32844b47a3c1ad318585, type: 3}
   humanPrefab: {fileID: 9003411383560432652, guid: 4f5a16f61ba4dcb4c9570db277d3b46f, type: 3}

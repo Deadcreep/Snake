@@ -9,24 +9,18 @@ namespace Edibles
 	{
 		private int areaWidth = 3;
 		private int maxNegativeCount = 3;
-		private int maxCrystalCount = 5;
-
-		private readonly List<CellType> cellTypes = new List<CellType>(){
-				CellType.Bomb, CellType.Correct, CellType.Crystal, CellType.Empty, CellType.Incorrect
-		};
-
-		private CellType randomCell => cellTypes[Random.Range(0, cellTypes.Count)];
-
+		private EdiblesWeights weights;
+		private CellType randomCell => weights.GetRandomCell();
 		private Row prevRow = new Row();
 		private Row currentRow = new Row();
 		private int negativeCount = 0;
 		private int crystalCount = 0;
 
-		public EdiblesGenerator(int areaWidth, int maxNegativeCount, int maxCrystalCount)
+		public EdiblesGenerator(int areaWidth, int maxNegativeCount, EdiblesWeights weights)
 		{
 			this.areaWidth = areaWidth;
 			this.maxNegativeCount = maxNegativeCount;
-			this.maxCrystalCount = maxCrystalCount;
+			this.weights = weights;
 		}
 
 		public void Clear()
@@ -65,7 +59,7 @@ namespace Edibles
 			if (rowCrystalCount == 0)
 				crystalCount--;
 			else
-				crystalCount += rowCrystalCount;			
+				crystalCount += rowCrystalCount;
 			return currentRow;
 		}
 

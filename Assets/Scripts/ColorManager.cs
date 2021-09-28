@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Snake;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Edibles
 		private List<Color> incorrectColors;
 		private LinkedList<Color> colorSequence;
 		private LinkedListNode<Color> currentNode;
+		private LinkedListNode<Color> nextNode;
 		private ReactiveCommand colorizerMovingCommad;
 		private Vector3 stepVector;
 
@@ -38,7 +40,7 @@ namespace Edibles
 			colorizer.OnColorized -= Colorize;
 		}
 
-		public void SetupColorizer(float colorizerStep)
+		public void SetupColorizer(float colorizerStep, float initialOffset)
 		{
 			stepVector = Vector3.forward * colorizerStep;
 			colorizerMovingCommad = new ReactiveCommand();
@@ -46,7 +48,21 @@ namespace Edibles
 								 .Subscribe(UpdateColorizer)
 								 .AddTo(this);
 
-			colorizer.transform.position = new Vector3(0f, colorizer.transform.position.y, colorizerStep);
+			colorizer.transform.position = new Vector3(0f, colorizer.transform.position.y, colorizerStep + initialOffset);
+		}
+
+		public Color GetColorAt(int indexInSequence)
+		{
+			
+			if (indexInSequence >= colorSequence.Count)
+			{
+				Debug.Log($"[ColorManager] index {indexInSequence % colorSequence.Count}", this);
+				return colorSequence.ElementAt(indexInSequence % colorSequence.Count);
+			}
+			else
+			{
+				return colorSequence.ElementAt(indexInSequence);
+			}
 		}
 
 		private void Colorize()
@@ -58,15 +74,17 @@ namespace Edibles
 
 		private void UpdateCorrectColor()
 		{
-			for (int i = 0; i < incorrectColors.Count; i++)
-			{
-				if (incorrectColors[i] == (currentNode.Next ?? colorSequence.First).Value)
-				{
-					incorrectColors[i] = CorrectColor;
-					break;
-				}
-			}
-			currentNode = currentNode.Next ?? colorSequence.First;
+			//for (int i = 0; i < incorrectColors.Count; i++)
+			//{
+			//	if (incorrectColors[i] == nextNode.Value)
+			//	{
+			//		incorrectColors[i] = CorrectColor;
+			//		break;
+			//	}
+			//}
+			incorrectColors = colorSequence.Where(x => x != nextNode.Value).ToList();
+			currentNode = nextNode;
+			nextNode = nextNode.Next ?? colorSequence.First;
 		}
 
 		private void CreateSequence()
@@ -80,12 +98,13 @@ namespace Edibles
 			}
 			colorSequence = new LinkedList<Color>(colors);
 			currentNode = colorSequence.First;
+			nextNode = currentNode.Next;
 		}
 
 		private void UpdateColorizer(Unit _)
 		{
 			colorizer.transform.position += stepVector;
-			colorizer.SetColor((currentNode.Next ?? colorSequence.First).Value);
+			colorizer.SetColor(nextNode.Value);
 		}
 	}
 }
