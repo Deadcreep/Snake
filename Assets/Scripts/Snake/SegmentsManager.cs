@@ -82,14 +82,14 @@ namespace Snake
 				segments[segments.Count - 1].EatingTween.onComplete = null;
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			for (int i = 1; i < segments.Count; i++)
 			{
 				var current = segments[i].transform;
 				var prev = segments[i - 1].transform;
 				var distance = Vector3.Distance(prev.position, current.position);
-				var slerpSpeed = Time.deltaTime * distance / 0.1f * speedZ;
+				var slerpSpeed = Time.fixedDeltaTime * distance / 0.2f * speedZ;
 				current.SetPositionAndRotation(Vector3.Slerp(current.position, prev.position, slerpSpeed),
 					Quaternion.Slerp(current.rotation, prev.rotation, slerpSpeed));
 			}
