@@ -14,7 +14,7 @@ public class FloorManager : MonoBehaviour
 	private void Start()
 	{
 		segmentSize = first.GetComponent<MeshRenderer>().bounds.size.z;
-		distanceToSwitch = segmentSize;
+		distanceToSwitch = segmentSize * 0.9f;
 		current = second;
 		next = first;
 	}
@@ -22,7 +22,7 @@ public class FloorManager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		passedDistance += SpeedManager.CurrentSpeed * Time.fixedDeltaTime;
-		if (passedDistance > distanceToSwitch)
+		if (passedDistance >= distanceToSwitch)
 		{
 			next.position = current.position + Vector3.forward * segmentSize;
 			temp = current;

@@ -70,6 +70,7 @@ namespace Edibles
 			yield return x.ToAwaitableEnumerator();
 			yield return x2.ToAwaitableEnumerator();
 			yield return x3.ToAwaitableEnumerator();
+
 			correctColor = colorManager.CorrectColor;
 			for (int i = 0; i < initialRowCount; i++)
 			{

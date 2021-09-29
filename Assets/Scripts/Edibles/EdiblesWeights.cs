@@ -11,7 +11,18 @@ namespace Edibles
 	public class EdiblesWeights : ScriptableObject
 	{
 		[SerializeField] public List<WeightedCell> weights;
-		public float totalWeight { get; private set; }
+
+		public float TotalWeight
+		{
+			get
+			{
+				if (totalWeight == 0)
+					totalWeight = weights.Sum(x => x.Weight);
+				return totalWeight;
+			}
+		}
+
+		[SerializeField] private float totalWeight = 0;
 
 		private void OnEnable()
 		{
@@ -28,7 +39,6 @@ namespace Edibles
 		private void OnValidate()
 		{
 			totalWeight = weights.Sum(x => x.Weight);
-			//weights.Sort((x, y) => x.Weight.CompareTo(y.Weight));
 		}
 
 		[ContextMenu("Test")]
@@ -44,7 +54,7 @@ namespace Edibles
 			{
 				sb.Append(item.x.Key + " " + item.Item2 + "; ");
 			}
-			Debug.Log($"[EdiblesWeights] {totalWeight} {sb}", this);
+			Debug.Log($"[EdiblesWeights] {TotalWeight} {sb}", this);
 		}
 	}
 
@@ -52,7 +62,7 @@ namespace Edibles
 	{
 		public static CellType GetRandomCell(this EdiblesWeights weights)
 		{
-			float randomWeight = Random.Range(0, weights.totalWeight);
+			float randomWeight = Random.Range(0, weights.TotalWeight);
 			foreach (WeightedCell cell in weights.weights)
 			{
 				if (randomWeight <= cell.Weight)
